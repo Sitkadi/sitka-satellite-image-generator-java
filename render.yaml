@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: sitka-satellite-image-generator-java
+    runtime: docker
+    plan: free
+    region: oregon
+    
+    # Build configuration
+    dockerfilePath: ./Dockerfile
+    
+    # Environment variables
+    envVars:
+      - key: PORT
+        value: 9000
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: WATI_BASE_URL
+        value: https://live.wati.io/1047617
+      - key: WATI_API_TOKEN
+        sync: false
+      - key: WATI_PHONE_ID
+        sync: false
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+    
+    # Health check
+    healthCheckPath: /analise-imagemdesatelite/health
+    
+    # Auto-deploy on push
+    autoDeploy: true

@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: sitka-satellite-image-generator
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+server:
+  port: ${PORT:9000}
+  servlet:
+    context-path: /
+
+logging:
+  level:
+    root: INFO
+    com.sitka: DEBUG
+  pattern:
+    console: "[%d{yyyy-MM-dd HH:mm:ss}] [%level] %msg%n"
+
+# Configurações da aplicação
+app:
+  google:
+    api-key: ${GOOGLE_API_KEY:}
+  wati:
+    base-url: ${WATI_BASE_URL:https://live.wati.io/1047617}
+    api-token: ${WATI_API_TOKEN:}
+    phone-id: ${WATI_PHONE_ID:}
+  temp-dir: /root/sitka-temp/imagens/
