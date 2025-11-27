@@ -63,6 +63,7 @@ public class WatiMessageService {
 
             // Criar request POST
             HttpPost httpPost = new HttpPost(url);
+            httpPost.setHeader("Authorization", "Bearer " + token);
             httpPost.setHeader("Content-Type", "application/json");
 
             // Criar payload JSON
@@ -137,15 +138,15 @@ public class WatiMessageService {
             String token = watiApiToken.startsWith("Bearer ") ? watiApiToken.substring(7) : watiApiToken;
             
             // Construir URL com parâmetros
-            String url = String.format("%s/api/v1/sendSessionFile/%s?token=%s",
-                    watiBaseUrl, cleanPhoneNumber, URLEncoder.encode(token, "UTF-8"));
+            String url = String.format("%s/api/v1/sendSessionFile/%s", watiBaseUrl, cleanPhoneNumber);
             
             if (caption != null && !caption.isEmpty()) {
-                url += "&caption=" + URLEncoder.encode(caption, "UTF-8");
+                url += "?caption=" + URLEncoder.encode(caption, "UTF-8");
             }
 
             // Criar request POST com multipart/form-data
             HttpPost httpPost = new HttpPost(url);
+            httpPost.setHeader("Authorization", "Bearer " + token);
 
             // Criar multipart entity
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
@@ -214,6 +215,7 @@ public class WatiMessageService {
                     watiBaseUrl, encodedToken);
 
             HttpPost httpPost = new HttpPost(url);
+            httpPost.setHeader("Authorization", "Bearer " + token);
             httpPost.setHeader("Content-Type", "application/json");
 
             JSONObject payload = new JSONObject();
