@@ -1,6 +1,8 @@
 package com.sitka.satellite.controller;
 
 import com.sitka.satellite.service.WatiMessageService;
+import com.sitka.satellite.service.GoogleMapsService;
+import java.io.File;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,9 @@ public class WatiTestController {
 
     @Autowired
     private WatiMessageService watiMessageService;
+
+    @Autowired
+    private GoogleMapsService googleMapsService;
 
     /**
      * Endpoint de teste para enviar mensagem de texto simples
@@ -142,9 +147,22 @@ public class WatiTestController {
             return ResponseEntity.badRequest().body(error);
         }
 
-        // Enviar mensagem com a imagem de satélite
-        String message = "Aqui está a imagem de satélite para: " + address;
-        Map<String, Object> result = watiMessageService.sendTextMessage(phoneNumber, message);
+        // Gerar imagem de satélite
+        File satelliteImage = googleMapsService.getSatelliteImage(address);
+
+        if (satelliteImage == null) {
+            Map<String, Object> error = new HashMap<>();
+            error.put("ok", false);
+            error.put("message", "Erro ao gerar imagem de satélite");
+            return ResponseEntity.status(500).body(error);
+        }
+
+        // Enviar imagem de satélite via WATI
+        String caption = "Imagem de satélite para: " + address;
+        Map<String, Object> result = watiMessageService.sendFile(phoneNumber, satelliteImage, caption);
+
+        // Deletar imagem temporária
+        satelliteImage.delete();
         return ResponseEntity.ok(result);
     }
 

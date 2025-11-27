@@ -16,13 +16,17 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.net.URLEncoder;
+import java.io.File;
+import java.io.FileInputStream;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
 
 @Service
 public class WatiMessageService {
 
     private static final Logger logger = LoggerFactory.getLogger(WatiMessageService.class);
 
-    @Value("${app.wati.base-url:https://live.wati.io/1047617}")
+    @Value("${app.wati.base-url:https://live-mt-server.wati.io/1047617}")
     private String watiBaseUrl;
 
     @Value("${app.wati.api-token:}")
@@ -93,6 +97,82 @@ public class WatiMessageService {
             } else {
                 response.put("ok", false);
                 response.put("message", "Erro ao enviar mensagem");
+                response.put("status_code", statusCode);
+                response.put("error", responseBody);
+            }
+
+            // Fechar recursos
+            httpResponse.close();
+            httpClient.close();
+
+        } catch (IOException e) {
+            logger.error("IOException ao conectar com WATI", e);
+            response.put("ok", false);
+            response.put("message", "Erro ao conectar com WATI");
+            response.put("error", e.getMessage());
+        } catch (Exception e) {
+            logger.error("Exception ao processar requisição", e);
+            response.put("ok", false);
+            response.put("message", "Erro ao processar requisição");
+            response.put("error", e.getMessage());
+        }
+
+        return response;
+    }
+
+    /**
+     * Enviar arquivo/imagem via WATI usando o endpoint /sendSessionFile
+     */
+    public Map<String, Object> sendFile(String phoneNumber, File file, String caption) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            // Remover caracteres especiais do número
+            String cleanPhoneNumber = phoneNumber.replaceAll("[^0-9]", "");
+
+            // Criar cliente HTTP
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+
+            // Remover "Bearer " do token se estiver presente
+            String token = watiApiToken.startsWith("Bearer ") ? watiApiToken.substring(7) : watiApiToken;
+            
+            // Construir URL com parâmetros
+            String url = String.format("%s/api/v1/sendSessionFile/%s?token=%s",
+                    watiBaseUrl, cleanPhoneNumber, URLEncoder.encode(token, "UTF-8"));
+            
+            if (caption != null && !caption.isEmpty()) {
+                url += "&caption=" + URLEncoder.encode(caption, "UTF-8");
+            }
+
+            // Criar request POST com multipart/form-data
+            HttpPost httpPost = new HttpPost(url);
+
+            // Criar multipart entity
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            builder.addPart("file", new FileBody(file));
+            httpPost.setEntity(builder.build());
+
+            // Executar request
+            CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
+
+            // Obter response
+            String responseBody = EntityUtils.toString(httpResponse.getEntity());
+            int statusCode = httpResponse.getStatusLine().getStatusCode();
+
+            // Log de debug
+            logger.info("WATI File Request URL: {}", url);
+            logger.info("WATI File Request - File: {}, Caption: {}", file.getName(), caption);
+            logger.info("WATI File Response - Status: {}, Body: {}", statusCode, responseBody);
+
+            // Processar response
+            if (statusCode >= 200 && statusCode < 300) {
+                response.put("ok", true);
+                response.put("message", "Arquivo enviado com sucesso!");
+                response.put("status_code", statusCode);
+                response.put("wati_response", new JSONObject(responseBody).toMap());
+            } else {
+                response.put("ok", false);
+                response.put("message", "Erro ao enviar arquivo");
                 response.put("status_code", statusCode);
                 response.put("error", responseBody);
             }
