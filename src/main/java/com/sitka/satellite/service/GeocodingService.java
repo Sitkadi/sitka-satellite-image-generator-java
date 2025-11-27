@@ -12,7 +12,7 @@ public class GeocodingService {
 
     private final GeoApiContext context;
 
-    public GeocodingService(@Value("${google.maps.api.key}") String apiKey) {
+    public GeocodingService(@Value("${GOOGLE_API_KEY}") String apiKey) {
         this.context = new GeoApiContext.Builder()
                 .apiKey(apiKey)
                 .build();
