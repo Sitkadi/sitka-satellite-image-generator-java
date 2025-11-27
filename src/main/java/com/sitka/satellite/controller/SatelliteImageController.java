@@ -2,6 +2,7 @@ package com.sitka.satellite.controller;
 
 import com.google.gson.JsonObject;
 import com.sitka.satellite.service.SatelliteImageService;
+import com.sitka.satellite.service.GeocodingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class SatelliteImageController {
     @Autowired
     private SatelliteImageService satelliteImageService;
 
+    @Autowired
+    private GeocodingService geocodingService;
+
     /**
      * Endpoint para gerar e enviar imagem de satélite via WATI
      * 
@@ -34,8 +38,8 @@ public class SatelliteImageController {
      *   "endereco": "Av. Dr. Guilherme Dumont Vilares, 2000, São Paulo, SP"
      * }
      */
-    @PostMapping
-    public ResponseEntity<Map<String, Object>> analisarImagemDesatelite(
+        @PostMapping("/por-endereco")
+        public ResponseEntity<Map<String, Object>> analisarImagemPorEndereco(
             @RequestBody Map<String, String> request) {
 
         Map<String, Object> response = new HashMap<>();
