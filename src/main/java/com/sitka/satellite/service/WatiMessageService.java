@@ -21,13 +21,13 @@ public class WatiMessageService {
 
     private static final Logger logger = LoggerFactory.getLogger(WatiMessageService.class);
 
-    @Value("${wati.api.url:https://api.wati.io/api/v1}")
-    private String watiApiUrl;
+    @Value("${app.wati.base-url:https://live.wati.io/1047617}")
+    private String watiBaseUrl;
 
-    @Value("${wati.api.token:}")
+    @Value("${app.wati.api-token:}")
     private String watiApiToken;
 
-    @Value("${wati.phone.id:}")
+    @Value("${app.wati.phone-id:}")
     private String watiPhoneId;
 
     /**
@@ -45,7 +45,7 @@ public class WatiMessageService {
 
             // URL do endpoint WATI
             String url = String.format("%s/sendSessionMessage?token=%s",
-                    watiApiUrl, watiApiToken);
+                    watiBaseUrl, watiApiToken);
 
             // Criar request POST
             HttpPost httpPost = new HttpPost(url);
@@ -113,7 +113,7 @@ public class WatiMessageService {
             CloseableHttpClient httpClient = HttpClients.createDefault();
 
             String url = String.format("%s/sendSessionMessage?token=%s",
-                    watiApiUrl, watiApiToken);
+                    watiBaseUrl, watiApiToken);
 
             HttpPost httpPost = new HttpPost(url);
             httpPost.setHeader("Content-Type", "application/json");
