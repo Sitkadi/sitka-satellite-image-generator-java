@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.net.URLEncoder;
 
 @Service
 public class WatiMessageService {
@@ -50,8 +51,9 @@ public class WatiMessageService {
             CloseableHttpClient httpClient = HttpClients.createDefault();
 
             // URL do endpoint WATI
+            String encodedToken = URLEncoder.encode(watiApiToken, "UTF-8");
             String url = String.format("%s/sendSessionMessage?token=%s",
-                    watiBaseUrl, watiApiToken);
+                    watiBaseUrl, encodedToken);
 
             // Criar request POST
             HttpPost httpPost = new HttpPost(url);
@@ -120,8 +122,9 @@ public class WatiMessageService {
 
             CloseableHttpClient httpClient = HttpClients.createDefault();
 
+            String encodedToken = URLEncoder.encode(watiApiToken, "UTF-8");
             String url = String.format("%s/sendSessionMessage?token=%s",
-                    watiBaseUrl, watiApiToken);
+                    watiBaseUrl, encodedToken);
 
             HttpPost httpPost = new HttpPost(url);
             httpPost.setHeader("Content-Type", "application/json");
