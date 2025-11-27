@@ -40,8 +40,8 @@ public class WatiMessageService {
             CloseableHttpClient httpClient = HttpClients.createDefault();
 
             // URL do endpoint WATI
-            String url = String.format("%s/sendSessionMessage/%s?token=%s",
-                    watiApiUrl, watiPhoneId, watiApiToken);
+            String url = String.format("%s/sendSessionMessage?token=%s",
+                    watiApiUrl, watiApiToken);
 
             // Criar request POST
             HttpPost httpPost = new HttpPost(url);
@@ -103,8 +103,8 @@ public class WatiMessageService {
 
             CloseableHttpClient httpClient = HttpClients.createDefault();
 
-            String url = String.format("%s/sendSessionMessage/%s?token=%s",
-                    watiApiUrl, watiPhoneId, watiApiToken);
+            String url = String.format("%s/sendSessionMessage?token=%s",
+                    watiApiUrl, watiApiToken);
 
             HttpPost httpPost = new HttpPost(url);
             httpPost.setHeader("Content-Type", "application/json");
