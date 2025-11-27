@@ -51,7 +51,9 @@ public class WatiMessageService {
             CloseableHttpClient httpClient = HttpClients.createDefault();
 
             // URL do endpoint WATI
-            String encodedToken = URLEncoder.encode(watiApiToken, "UTF-8");
+            // Remover "Bearer " do token se estiver presente
+            String token = watiApiToken.startsWith("Bearer ") ? watiApiToken.substring(7) : watiApiToken;
+            String encodedToken = URLEncoder.encode(token, "UTF-8");
             String url = String.format("%s/sendSessionMessage?token=%s",
                     watiBaseUrl, encodedToken);
 
@@ -122,7 +124,9 @@ public class WatiMessageService {
 
             CloseableHttpClient httpClient = HttpClients.createDefault();
 
-            String encodedToken = URLEncoder.encode(watiApiToken, "UTF-8");
+            // Remover "Bearer " do token se estiver presente
+            String token = watiApiToken.startsWith("Bearer ") ? watiApiToken.substring(7) : watiApiToken;
+            String encodedToken = URLEncoder.encode(token, "UTF-8");
             String url = String.format("%s/sendSessionMessage?token=%s",
                     watiBaseUrl, encodedToken);
 
