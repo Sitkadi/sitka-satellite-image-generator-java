@@ -9,6 +9,8 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -16,6 +18,8 @@ import java.util.Map;
 
 @Service
 public class WatiMessageService {
+
+    private static final Logger logger = LoggerFactory.getLogger(WatiMessageService.class);
 
     @Value("${wati.api.url:https://api.wati.io/api/v1}")
     private String watiApiUrl;
@@ -62,6 +66,9 @@ public class WatiMessageService {
             String responseBody = EntityUtils.toString(httpResponse.getEntity());
             int statusCode = httpResponse.getStatusLine().getStatusCode();
 
+            // Log de debug
+            logger.info("WATI Response - Status: {}, Body: {}", statusCode, responseBody);
+
             // Processar response
             if (statusCode >= 200 && statusCode < 300) {
                 response.put("ok", true);
@@ -80,10 +87,12 @@ public class WatiMessageService {
             httpClient.close();
 
         } catch (IOException e) {
+            logger.error("IOException ao conectar com WATI", e);
             response.put("ok", false);
             response.put("message", "Erro ao conectar com WATI");
             response.put("error", e.getMessage());
         } catch (Exception e) {
+            logger.error("Exception ao processar requisição", e);
             response.put("ok", false);
             response.put("message", "Erro ao processar requisição");
             response.put("error", e.getMessage());
@@ -122,6 +131,9 @@ public class WatiMessageService {
 
             String responseBody = EntityUtils.toString(httpResponse.getEntity());
             int statusCode = httpResponse.getStatusLine().getStatusCode();
+
+            // Log de debug
+            logger.info("WATI Template Response - Status: {}, Body: {}", statusCode, responseBody);
 
             if (statusCode >= 200 && statusCode < 300) {
                 response.put("ok", true);
