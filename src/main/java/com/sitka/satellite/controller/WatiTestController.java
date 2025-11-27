@@ -112,6 +112,43 @@ public class WatiTestController {
     }
 
     /**
+     * Endpoint para enviar imagem de satélite
+     * POST /wati/send-satellite-image
+     * 
+     * Body JSON:
+     * {
+     *   "phoneNumber": "5511989838304",
+     *   "address": "Av Dr Guilherme Dumont Vilares 2000"
+     * }
+     */
+    @PostMapping("/send-satellite-image")
+    public ResponseEntity<Map<String, Object>> sendSatelliteImage(
+            @RequestBody Map<String, String> request) {
+
+        String phoneNumber = request.get("phoneNumber");
+        String address = request.get("address");
+
+        if (phoneNumber == null || phoneNumber.isEmpty()) {
+            Map<String, Object> error = new HashMap<>();
+            error.put("ok", false);
+            error.put("message", "phoneNumber é obrigatório");
+            return ResponseEntity.badRequest().body(error);
+        }
+
+        if (address == null || address.isEmpty()) {
+            Map<String, Object> error = new HashMap<>();
+            error.put("ok", false);
+            error.put("message", "address é obrigatório");
+            return ResponseEntity.badRequest().body(error);
+        }
+
+        // Enviar mensagem com a imagem de satélite
+        String message = "Aqui está a imagem de satélite para: " + address;
+        Map<String, Object> result = watiMessageService.sendTextMessage(phoneNumber, message);
+        return ResponseEntity.ok(result);
+    }
+
+    /**
      * Endpoint de informações sobre os endpoints WATI
      * GET /wati/info
      */
@@ -124,6 +161,7 @@ public class WatiTestController {
             put("POST /wati/send-message", "Enviar mensagem de texto (query params)");
             put("POST /wati/send-message-json", "Enviar mensagem de texto (JSON body)");
             put("POST /wati/send-template", "Enviar mensagem com template");
+            put("POST /wati/send-satellite-image", "Enviar imagem de satélite");
             put("GET /wati/info", "Informações dos endpoints");
         }});
         info.put("example_request", new HashMap<String, Object>() {{
