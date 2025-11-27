@@ -27,6 +27,12 @@ public class WatiMessageService {
     @Value("${app.wati.api-token:}")
     private String watiApiToken;
 
+    // Debug: Log das variáveis de ambiente
+    public WatiMessageService() {
+        logger.info("WATI_API_TOKEN env var: {}", System.getenv("WATI_API_TOKEN"));
+        logger.info("APP_WATI_API_TOKEN env var: {}", System.getenv("APP_WATI_API_TOKEN"));
+    }
+
     @Value("${app.wati.phone-id:}")
     private String watiPhoneId;
 
