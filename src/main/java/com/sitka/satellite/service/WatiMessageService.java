@@ -77,6 +77,9 @@ public class WatiMessageService {
             int statusCode = httpResponse.getStatusLine().getStatusCode();
 
             // Log de debug
+            logger.info("WATI Base URL: {}", watiBaseUrl);
+            logger.info("WATI Token (first 50 chars): {}", token.substring(0, Math.min(50, token.length())));
+            logger.info("WATI Encoded Token (first 50 chars): {}", encodedToken.substring(0, Math.min(50, encodedToken.length())));
             logger.info("WATI Request URL: {}", url);
             logger.info("WATI Request Payload: {}", payload.toString());
             logger.info("WATI Response - Status: {}, Body: {}", statusCode, responseBody);
