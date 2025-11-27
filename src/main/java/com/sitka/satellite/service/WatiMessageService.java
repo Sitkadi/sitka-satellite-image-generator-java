@@ -20,10 +20,10 @@ public class WatiMessageService {
     @Value("${wati.api.url:https://api.wati.io/api/v1}")
     private String watiApiUrl;
 
-    @Value("${wati.api.token}")
+    @Value("${wati.api.token:}")
     private String watiApiToken;
 
-    @Value("${wati.phone.id}")
+    @Value("${wati.phone.id:}")
     private String watiPhoneId;
 
     /**
