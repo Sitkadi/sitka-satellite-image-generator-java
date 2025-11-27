@@ -67,6 +67,8 @@ public class WatiMessageService {
             int statusCode = httpResponse.getStatusLine().getStatusCode();
 
             // Log de debug
+            logger.info("WATI Request URL: {}", url);
+            logger.info("WATI Request Payload: {}", payload.toString());
             logger.info("WATI Response - Status: {}, Body: {}", statusCode, responseBody);
 
             // Processar response
@@ -133,6 +135,8 @@ public class WatiMessageService {
             int statusCode = httpResponse.getStatusLine().getStatusCode();
 
             // Log de debug
+            logger.info("WATI Template Request URL: {}", url);
+            logger.info("WATI Template Request Payload: {}", payload.toString());
             logger.info("WATI Template Response - Status: {}, Body: {}", statusCode, responseBody);
 
             if (statusCode >= 200 && statusCode < 300) {
