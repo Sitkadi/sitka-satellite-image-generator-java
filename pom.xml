@@ -97,7 +97,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>3.1.5</version>
                 <configuration>
-                    <mainClass>com.sitka.SatelliteImageGeneratorApplication</mainClass>
+                    <mainClass>com.sitka.satellite.SatelliteImageGeneratorApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
